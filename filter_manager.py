@@ -214,7 +214,7 @@ class FilterManager(param.Parameterized):
                 
                 # Create base histogram plot
                 hist_plot = hv.Histogram((edges, counts)).opts(
-                    width=350, height=150, 
+                    width=350, height=300, 
                     xlabel=column, ylabel='Count',
                     title=f'{column} Distribution',
                     color='lightblue', alpha=0.7
@@ -243,7 +243,7 @@ class FilterManager(param.Parameterized):
                 
                 # Create base bar plot
                 bar_plot = hv.Bars(bar_data).opts(
-                    width=350, height=150,
+                    width=350, height=300,
                     xlabel=column, ylabel='Count',
                     title=f'{column} Distribution',
                     xrotation=45,
@@ -276,7 +276,7 @@ class FilterManager(param.Parameterized):
             counts = hist_data[0]
             
             hist_plot = hv.Histogram((edges, counts)).opts(
-                width=350, height=150,
+                width=350, height=300,
                 xlabel=f'{column} Length', ylabel='Count',
                 title=f'{column} Length Distribution',
                 color='lightblue', alpha=0.7

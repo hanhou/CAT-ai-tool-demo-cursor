@@ -70,7 +70,7 @@ class DataVisualizationApp(param.Parameterized):
             "---",
             "## Scatter Plot Settings", 
             self.scatter_manager.plot_controls,
-            width=400,
+            width=700,
             scroll=True
         )
         

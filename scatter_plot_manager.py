@@ -60,29 +60,55 @@ class ScatterPlotManager(param.Parameterized):
         )
         
         # Size controls
-        self.min_size_input = pn.widgets.IntInput(
+        self.min_size_slider = pn.widgets.IntSlider(
             name="Min Size",
             value=5,
             start=1,
             end=50,
-            width=80
+            width=200
         )
         
-        self.max_size_input = pn.widgets.IntInput(
+        self.max_size_slider = pn.widgets.IntSlider(
             name="Max Size", 
             value=20,
             start=1,
             end=100,
-            width=80
+            width=200
         )
         
-        self.gamma_input = pn.widgets.FloatInput(
+        self.gamma_slider = pn.widgets.FloatSlider(
             name="Gamma",
             value=1.0,
             start=0.1,
             end=3.0,
             step=0.1,
-            width=80
+            width=200
+        )
+        
+        # Plot dimension controls
+        self.plot_width_slider = pn.widgets.IntSlider(
+            name="Plot Width",
+            value=600,
+            start=400,
+            end=1200,
+            width=200
+        )
+        
+        self.plot_height_slider = pn.widgets.IntSlider(
+            name="Plot Height",
+            value=400,
+            start=300,
+            end=800,
+            width=200
+        )
+        
+        # Font size control
+        self.fontsize_slider = pn.widgets.IntSlider(
+            name="Font Size",
+            value=12,
+            start=8,
+            end=20,
+            width=200
         )
         
         # Color palette selector
@@ -95,12 +121,21 @@ class ScatterPlotManager(param.Parameterized):
         )
         
         return pn.Column(
+            "### Axis Selection",
             pn.Row(self.x_selector, self.y_selector),
+            "### Mapping Selection", 
             pn.Row(self.size_selector, self.color_selector),
             "### Size Settings",
-            pn.Row(self.min_size_input, self.max_size_input, self.gamma_input),
+            self.min_size_slider,
+            self.max_size_slider,
+            self.gamma_slider,
             "### Color Settings", 
-            self.palette_selector
+            self.palette_selector,
+            "### Plot Dimensions",
+            self.plot_width_slider,
+            self.plot_height_slider,
+            "### Font Settings",
+            self.fontsize_slider
         )
     
     def _setup_widget_callbacks(self):
@@ -113,10 +148,13 @@ class ScatterPlotManager(param.Parameterized):
         self.y_selector.param.watch(trigger_update, 'value')
         self.size_selector.param.watch(trigger_update, 'value')
         self.color_selector.param.watch(trigger_update, 'value')
-        self.min_size_input.param.watch(trigger_update, 'value')
-        self.max_size_input.param.watch(trigger_update, 'value')
-        self.gamma_input.param.watch(trigger_update, 'value')
+        self.min_size_slider.param.watch(trigger_update, 'value')
+        self.max_size_slider.param.watch(trigger_update, 'value')
+        self.gamma_slider.param.watch(trigger_update, 'value')
         self.palette_selector.param.watch(trigger_update, 'value')
+        self.plot_width_slider.param.watch(trigger_update, 'value')
+        self.plot_height_slider.param.watch(trigger_update, 'value')
+        self.fontsize_slider.param.watch(trigger_update, 'value')
     
     def update_options(self, data):
         """Update selector options based on available data columns"""
@@ -200,11 +238,11 @@ class ScatterPlotManager(param.Parameterized):
                     if max_val > min_val:
                         normalized_sizes = (size_data - min_val) / (max_val - min_val)
                         # Apply gamma correction
-                        gamma = self.gamma_input.value
+                        gamma = self.gamma_slider.value
                         normalized_sizes = normalized_sizes ** gamma
                         # Scale to size range
-                        min_size = self.min_size_input.value
-                        max_size = self.max_size_input.value
+                        min_size = self.min_size_slider.value
+                        max_size = self.max_size_slider.value
                         sizes = min_size + normalized_sizes * (max_size - min_size)
                         plot_data_final['size'] = sizes
                         value_dims.append('size')
@@ -220,14 +258,15 @@ class ScatterPlotManager(param.Parameterized):
             
             # Configure plot options
             plot_opts = {
-                'width': 600,
-                'height': 400,
+                'width': self.plot_width_slider.value,
+                'height': self.plot_height_slider.value,
                 'tools': ['hover', 'box_select', 'lasso_select'],
                 'size': 'size' if size_col else 10,
                 'alpha': 0.7,
                 'xlabel': x_col,
                 'ylabel': y_col,
-                'title': f'{y_col} vs {x_col}'
+                'title': f'{y_col} vs {x_col}',
+                'fontsize': self.fontsize_slider.value
             }
             
             # Add color options if color mapping is used
@@ -255,8 +294,11 @@ class ScatterPlotManager(param.Parameterized):
             'y_column': self.y_selector.value,
             'size_column': self.size_selector.value,
             'color_column': self.color_selector.value,
-            'min_size': self.min_size_input.value,
-            'max_size': self.max_size_input.value,
-            'gamma_size': self.gamma_input.value,
-            'color_palette': self.palette_selector.value
+            'min_size': self.min_size_slider.value,
+            'max_size': self.max_size_slider.value,
+            'gamma_size': self.gamma_slider.value,
+            'color_palette': self.palette_selector.value,
+            'plot_width': self.plot_width_slider.value,
+            'plot_height': self.plot_height_slider.value,
+            'fontsize': self.fontsize_slider.value
         } 
