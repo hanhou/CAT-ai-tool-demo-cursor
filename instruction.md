@@ -9,6 +9,9 @@ Build a general framework for a HoloViz Panel app for data visualization with th
 
 ## Detailed Requirements
 
+### Data
+- Generate example data for testing
+
 ### Dynamic Filtering
 
 #### 1. Support Dynamic Filtering
@@ -23,19 +26,19 @@ When a user adds a column to filter, automatically select the appropriate widget
 - **Regex Input**: For text columns
 
 #### 3. Distribution Visualization
-- Show the **distribution of the selected column** beside each filter widget
-- **Highlight the selected range** on the distribution visualization
-- Ensure visual feedback shows the current filter state
+- Show the **distribution of the selected column** below each filter widget
+- For each distribution plot, show the full range of data before the **current filter** and use a red shaded area to **highlight the selected range**.
+
 
 #### 4. Reactive Data Updates
-- When adding a new filter, **update the data table** immediately
-- Ensure that all **distributions are based on currently filtered data**
-- Maintain reactivity across all components when filters change
+- When adding a new filter, **update the data table** immediately and **update the scatter plot**
+- Evaluate filters from top to bottom, i.e., when 
+- Change of filters should update the table and the scatter plot
 
 ### Dynamic Scatter Plots
 
 #### 1. Custom Scatter Plot Creation
-Enable users to create any custom scatter plot with the following options:
+Enable users to create a custom scatter plot with the following options:
 
 **a) Axis Selection**
 - Choose any column as **X-axis** (numeric, categorical, or `nunique() < 10`)
@@ -53,15 +56,7 @@ Enable users to create any custom scatter plot with the following options:
 - Provide **selectable color palettes**
 - Support both continuous and discrete color schemes
 
-#### 2. Cross-Plot Selection Synchronization
-- Support **multiple scatter plots** simultaneously
-- Implement **box selection** and **lasso selection** tools
-- **Sync selections across all plots**: when user selects points in one plot, highlight the same data points in all other plots
-- Maintain selection state across plot interactions
 
-## Technical Implementation Notes
-
-- Leverage Panel's reactive programming paradigm for seamless interactivity
-- Design with modularity in mind for easy extension and maintenance
-- Ensure efficient data handling for real-time filtering and visualization updates
-- Implement proper error handling for edge cases (empty selections, invalid data types, etc.) 
+## Miscs
+- Keep the project files modular.
+- Run the app in debug mode
